@@ -1,6 +1,6 @@
-﻿using Business.Interfaces;
-using DTOs.Requests;
-using DTOs.Response;
+﻿using Business.Student.Interfaces;
+using DTOs.Student.Requests;
+using DTOs.Student.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lab11.Controllers;
@@ -10,23 +10,23 @@ namespace Lab11.Controllers;
 public class StudentController : ControllerBase
 {
     [HttpGet("get")]
-    public GetStudentResponse? GetStudent(
-        [FromServices] IGetCommand command,
+    public async Task<GetStudentResponse?> GetStudent(
+        [FromServices] IGetStudentCommand command,
         [FromQuery] Guid id)
     {
-        return command.Execute(id);
+        return await command.ExecuteAsync(id);
     }
 
     [HttpGet("get/all")]
     public List<GetStudentResponse> GetStudents(
-        [FromServices] IGetCommand command)
+        [FromServices] IGetStudentCommand command)
     {
         return command.GetAllStudents();
     }
 
     [HttpPost("create")]
     public async Task<Guid?> CreateStudent(
-        [FromServices] ICreateCommand command,
+        [FromServices] ICreateStudentCommand command,
         [FromBody] CreateStudentRequest request)
     {
         return await command.ExecuteAsync(request);
@@ -34,7 +34,7 @@ public class StudentController : ControllerBase
 
     [HttpPut("update")]
     public async Task UpdateStudent(
-        [FromServices] IUpdateCommand command,
+        [FromServices] IUpdateStudentCommand command,
         [FromBody] UpdateStudentRequest request)
     {
         await command.ExecuteAsync(request);
@@ -42,7 +42,7 @@ public class StudentController : ControllerBase
 
     [HttpDelete("delete")]
     public async Task DeleteStudent(
-        [FromServices] IDeleteCommand command,
+        [FromServices] IDeleteStudentCommand command,
         [FromQuery] Guid id)
     {
         await command.ExecuteAsync(id);

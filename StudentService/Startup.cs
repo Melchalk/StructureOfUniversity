@@ -1,9 +1,12 @@
-﻿using Business.Interfaces;
-using Business;
-using Repository.Interfaces;
-using Repository;
-using Validators.Interfaces;
+﻿using Business.Student;
+using Business.Student.Interfaces;
+using Data;
+using Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using PostgreSql.Ef;
+using PostgreSql.Ef.Interfaces;
 using Validators;
+using Validators.Interfaces;
 
 namespace StudentService;
 
@@ -34,14 +37,20 @@ public class Startup
                         .AllowAnyHeader());
             });
 
+        services.AddDbContext<StudentServiceDbContext>(options =>
+        {
+            options.UseNpgsql(Configuration.GetConnectionString("SQLConnectionString"));
+        });
+
         services.AddControllers();
 
+        services.AddScoped<IDataProvider, StudentServiceDbContext>();
         services.AddScoped<IStudentsRepository, StudentsRepository>();
 
-        services.AddTransient<IGetCommand, GetCommand>();
-        services.AddTransient<ICreateCommand, CreateCommand>();
-        services.AddTransient<IDeleteCommand, DeleteCommand>();
-        services.AddTransient<IUpdateCommand, UpdateCommand>();
+        services.AddTransient<IGetStudentCommand, GetStudentCommand>();
+        services.AddTransient<ICreateStudentCommand, CreateStudentCommand>();
+        services.AddTransient<IDeleteStudentCommand, DeleteStudentCommand>();
+        services.AddTransient<IUpdateStudentCommand, UpdateStudentCommand>();
 
         services.AddTransient<ICreateStudentValidator, CreateStudentValidator>();
         services.AddTransient<IUpdateStudentValidator, UpdateStudentValidator>();
@@ -60,9 +69,11 @@ public class Startup
 
         app.UseHttpsRedirection();
 
+        UpdateDatabase(app);
+
         app.UseRouting();
 
-        app.UseCors("GetPolicy");
+        app.UseCors("CorsPolicy");
 
         app.UseAuthorization();
 
@@ -70,5 +81,17 @@ public class Startup
         {
             endpoints.MapControllers();
         });
+    }
+
+    private void UpdateDatabase(IApplicationBuilder app)
+    {
+        using var serviceScope = app.ApplicationServices
+            .GetRequiredService<IServiceScopeFactory>()
+            .CreateScope();
+
+        using var context = serviceScope.ServiceProvider
+            .GetService<StudentServiceDbContext>();
+
+        context!.Database.Migrate();
     }
 }
