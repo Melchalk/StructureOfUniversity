@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab11", "Lab11.csproj", "{6BF5DBAD-1198-4541-980A-FD048BCC08A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentService", "StudentService.csproj", "{6BF5DBAD-1198-4541-980A-FD048BCC08A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "..\Repository\Repository.csproj", "{50EFB863-7771-48C1-BCC3-3AA1D06EBA2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "..\Repository\Repository.csproj", "{50EFB863-7771-48C1-BCC3-3AA1D06EBA2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "..\Business\Business.csproj", "{FD3E9E9C-DE71-4B37-834E-4189C64C9E5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "..\Business\Business.csproj", "{FD3E9E9C-DE71-4B37-834E-4189C64C9E5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "..\DTOs\DTOs.csproj", "{33D9B19F-E2CE-4BAA-935C-754A8A3FC2E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOs", "..\DTOs\DTOs.csproj", "{33D9B19F-E2CE-4BAA-935C-754A8A3FC2E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validators", "..\Validators\Validators.csproj", "{09F08814-BBAF-4531-A3C0-8E459A61D483}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Validators", "..\Validators\Validators.csproj", "{09F08814-BBAF-4531-A3C0-8E459A61D483}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

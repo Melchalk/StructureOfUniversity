@@ -17,6 +17,16 @@ public class StudentController : ControllerBase
         return command.Execute(id);
     }
 
+    [HttpGet("get/file")]
+    public IResult GetFileStudents()
+    {
+        string path = Directory.GetCurrentDirectory() + "/Students.json";
+        string contentType = ".json";
+        string downloadName = "Students.json";
+
+        return Results.File(path, contentType, downloadName);
+    }
+
     [HttpPost("create")]
     public async Task<Guid?> CreateStudent(
         [FromServices] ICreateCommand command,
