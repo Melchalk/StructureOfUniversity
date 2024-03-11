@@ -17,14 +17,11 @@ public class StudentController : ControllerBase
         return command.Execute(id);
     }
 
-    [HttpGet("get/file")]
-    public IResult GetFileStudents()
+    [HttpGet("get/all")]
+    public List<GetStudentResponse> GetStudents(
+        [FromServices] IGetCommand command)
     {
-        string path = Directory.GetCurrentDirectory() + "/Students.json";
-        string contentType = ".json";
-        string downloadName = "Students.json";
-
-        return Results.File(path, contentType, downloadName);
+        return command.GetAllStudents();
     }
 
     [HttpPost("create")]
