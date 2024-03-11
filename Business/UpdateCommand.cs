@@ -25,7 +25,7 @@ public class UpdateCommand : IUpdateCommand
 
         if (!result.IsValid)
         {
-            throw new ArgumentException("Student with this id not found");
+            return;
         }
 
         var student = _repository.Students.First(s => s.Id == request.Id);

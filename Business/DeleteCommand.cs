@@ -19,7 +19,7 @@ public class DeleteCommand : IDeleteCommand
 
         if (student is null)
         {
-            throw new ArgumentException("Student with this id not found");
+            return;
         }
 
         _repository.Students.Remove(student);
