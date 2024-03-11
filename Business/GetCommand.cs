@@ -16,7 +16,8 @@ public class GetCommand : IGetCommand
 
     public GetStudentResponse? Execute(Guid id)
     {
-        var student = _repository.Students.FirstOrDefault(x => x.Id == id);
+        var student = _repository.Students
+            .FirstOrDefault(x => x.Id == id);
 
         return student is null
             ? null
@@ -27,14 +28,21 @@ public class GetCommand : IGetCommand
                 University = student.University,
             };
     }
-    /*
-    public async Task<IResult> GetFile()
-    {
-        string path = Directory.GetCurrentDirectory() + "/Students.json";
-        byte[] fileContent = await File.ReadAllBytesAsync(path);
-        string contentType = ".json";
-        string downloadName = "Students.json";
 
-        return Results.File(fileContent, contentType, downloadName);
-    }*/
+    public List<GetStudentResponse> GetAllStudents()
+    {
+        var students = new List<GetStudentResponse>();
+
+        foreach(var student in _repository.Students)
+        {
+            students.Add(new GetStudentResponse()
+            {
+                Name = student.Name,
+                Course = student.Course,
+                University = student.University,
+            });
+        }
+
+        return students;
+    }
 }
