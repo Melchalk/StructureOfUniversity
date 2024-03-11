@@ -1,23 +1,22 @@
-﻿using Business.Interfaces;
-using DTOs.Response;
-using Repository.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using DTOs.Student.Response;
+using Business.Student.Interfaces;
+using Data.Interfaces;
 
-namespace Business;
+namespace Business.Student;
 
-public class GetCommand : IGetCommand
+public class GetStudentCommand : IGetStudentCommand
 {
     private IStudentsRepository _repository;
 
-    public GetCommand(IStudentsRepository repository)
+    public GetStudentCommand(IStudentsRepository repository)
     {
         _repository = repository;
     }
 
-    public GetStudentResponse? Execute(Guid id)
+    public async Task<GetStudentResponse?> ExecuteAsync(Guid id)
     {
-        var student = _repository.Students
-            .FirstOrDefault(x => x.Id == id);
+        var student = await _repository.GetAsync(id);
 
         return student is null
             ? null
@@ -33,7 +32,7 @@ public class GetCommand : IGetCommand
     {
         var students = new List<GetStudentResponse>();
 
-        foreach(var student in _repository.Students)
+        foreach (var student in _repository.GetStudents())
         {
             students.Add(new GetStudentResponse()
             {

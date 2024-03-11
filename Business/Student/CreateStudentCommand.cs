@@ -1,18 +1,18 @@
-﻿using Business.Interfaces;
-using DTOs;
-using DTOs.Requests;
+﻿using Business.Student.Interfaces;
+using Data.Interfaces;
+using DbModels;
+using DTOs.Student.Requests;
 using FluentValidation.Results;
-using Repository.Interfaces;
 using Validators.Interfaces;
 
-namespace Business;
+namespace Business.Student;
 
-public class CreateCommand : ICreateCommand
+public class CreateStudentCommand : ICreateStudentCommand
 {
     private IStudentsRepository _repository;
     private ICreateStudentValidator _validator;
 
-    public CreateCommand(
+    public CreateStudentCommand(
         IStudentsRepository repository,
         ICreateStudentValidator validator)
     {
@@ -29,7 +29,7 @@ public class CreateCommand : ICreateCommand
             return null;
         }
 
-        StudentDto student = new()
+        DbStudent student = new()
         {
             Id = Guid.NewGuid(),
             Name = request.Name,
@@ -37,9 +37,7 @@ public class CreateCommand : ICreateCommand
             University = request.University,
         };
 
-        _repository.Students.Add(student);
-
-        await _repository.SaveAsync();
+        await _repository.CreateAsync(student);
 
         return student.Id;
     }

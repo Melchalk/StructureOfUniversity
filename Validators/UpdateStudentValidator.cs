@@ -1,7 +1,7 @@
-﻿using DTOs.Requests;
+﻿using DTOs.Student.Requests;
 using FluentValidation;
-using Repository.Interfaces;
 using Validators.Interfaces;
+using Data.Interfaces;
 
 namespace Validators;
 
@@ -14,7 +14,7 @@ public class UpdateStudentValidator : AbstractValidator<UpdateStudentRequest>, I
           .WithMessage("Course must be positive and less or equals 6");
 
         RuleFor(request => request.Id)
-          .Must(id => repository.Students.FirstOrDefault(s => s.Id == id) is not null)
+          .Must(id => repository.GetAsync(id).Result is not null)
           .WithMessage("Student with this id not found");
     }
 }

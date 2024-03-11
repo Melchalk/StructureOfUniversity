@@ -1,4 +1,4 @@
-﻿namespace DTOs.Requests;
+﻿namespace DTOs.Student.Requests;
 
 public class UpdateStudentRequest
 {

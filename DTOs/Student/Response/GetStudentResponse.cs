@@ -1,4 +1,4 @@
-﻿namespace DTOs.Response;
+﻿namespace DTOs.Student.Response;
 
 public class GetStudentResponse
 {

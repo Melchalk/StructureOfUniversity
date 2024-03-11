@@ -1,4 +1,4 @@
-﻿using DTOs.Requests;
+﻿using DTOs.Student.Requests;
 using FluentValidation;
 using Validators.Interfaces;
 

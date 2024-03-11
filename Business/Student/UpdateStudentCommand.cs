@@ -1,17 +1,17 @@
-﻿using Business.Interfaces;
-using DTOs.Requests;
+﻿using Business.Student.Interfaces;
+using Data.Interfaces;
+using DTOs.Student.Requests;
 using FluentValidation.Results;
-using Repository.Interfaces;
 using Validators.Interfaces;
 
-namespace Business;
+namespace Business.Student;
 
-public class UpdateCommand : IUpdateCommand
+public class UpdateStudentCommand : IUpdateStudentCommand
 {
     private IStudentsRepository _repository;
     private IUpdateStudentValidator _validator;
 
-    public UpdateCommand(
+    public UpdateStudentCommand(
         IStudentsRepository repository,
         IUpdateStudentValidator validator)
     {
@@ -28,12 +28,12 @@ public class UpdateCommand : IUpdateCommand
             throw new ArgumentException("Student with this id not found");
         }
 
-        var student = _repository.Students.First(s => s.Id == request.Id);
+        var student = await _repository.GetAsync(request.Id);
 
-        student.Name = request.Name ?? student.Name;
+        student!.Name = request.Name ?? student.Name;
         student.Course = request.Course ?? student.Course;
         student.University = request.University ?? student.University;
 
-        await _repository.SaveAsync();
+        _repository.Save();
     }
 }
