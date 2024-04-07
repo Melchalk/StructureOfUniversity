@@ -1,8 +1,7 @@
-﻿using DbModels;
-using DTOs.Student.Response;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using StructureOfUniversity.DbModels;
 
-namespace Data.Interfaces;
+namespace StructureOfUniversity.Data.Interfaces;
 
 public interface IStudentsRepository
 {

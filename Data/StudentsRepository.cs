@@ -1,9 +1,9 @@
-﻿using Data.Interfaces;
-using DbModels;
-using Microsoft.EntityFrameworkCore;
-using PostgreSql.Ef.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using StructureOfUniversity.Data.Interfaces;
+using StructureOfUniversity.DbModels;
+using StructureOfUniversity.PostgreSql.Ef.Interfaces;
 
-namespace Data;
+namespace StructureOfUniversity.Data;
 
 public class StudentsRepository : IStudentsRepository
 {

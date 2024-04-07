@@ -1,4 +1,4 @@
-using StudentService;
+using StructureOfUniversity;
 
 Host
     .CreateDefaultBuilder(args)
