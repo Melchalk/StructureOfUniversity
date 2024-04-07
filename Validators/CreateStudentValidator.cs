@@ -1,8 +1,8 @@
-﻿using DTOs.Requests;
-using FluentValidation;
-using Validators.Interfaces;
+﻿using FluentValidation;
+using StructureOfUniversity.DTOs.Student.Requests;
+using StructureOfUniversity.Validators.Interfaces;
 
-namespace Validators;
+namespace StructureOfUniversity.Validators;
 
 public class CreateStudentValidator : AbstractValidator<CreateStudentRequest>, ICreateStudentValidator
 {
