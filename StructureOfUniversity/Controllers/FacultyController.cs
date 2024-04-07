@@ -12,8 +12,8 @@ namespace StructureOfUniversity.Controllers;
 public class FacultyController(
     [FromServices] IFacultyService service) : ControllerBase
 {
-    [HttpGet("get")]
-    public async Task<GetFacultyResponse?> GetFaculty([FromQuery] int number)
+    [HttpGet("get/{number:int}")]
+    public async Task<GetFacultyResponse?> GetFaculty(int number)
     {
         return await service.GetAsync(number);
     }
