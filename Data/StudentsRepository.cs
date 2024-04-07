@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Data.Interfaces;
+using DbModels;
+using Microsoft.EntityFrameworkCore;
 using StructureOfUniversity.Data.Interfaces;
 using StructureOfUniversity.DbModels;
 using StructureOfUniversity.PostgreSql.Ef.Interfaces;

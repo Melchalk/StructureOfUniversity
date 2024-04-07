@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DbModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using StructureOfUniversity.DbModels;
@@ -40,12 +41,12 @@ class InitialTable : Migration
         #region Student
 
         migrationBuilder.CreateTable(
-            name: DbStudent.TableName,
-            columns: table => new
-            {
-                Id = table.Column<Guid>(nullable: false),
-                Name = table.Column<string>(nullable: false),
-                Course = table.Column<int>(nullable: false),
+        name: DbStudent.TableName,
+        columns: table => new
+        {
+            Id = table.Column<Guid>(nullable: false),
+            Name = table.Column<string>(nullable: false),
+            Course = table.Column<int>(nullable: false),
                 FacultyNumber = table.Column<int>(nullable: false)
             },
             constraints: table =>
@@ -74,7 +75,7 @@ class InitialTable : Migration
                 Password = table.Column<string>(nullable: false),
                 Salt = table.Column<string>(nullable: false),
                 FacultyNumber = table.Column<int>(nullable: true)
-            },
+        },
             constraints: table =>
             {
                 table.PrimaryKey("PK_Teachers", x => x.Id);
