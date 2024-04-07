@@ -12,8 +12,8 @@ namespace StructureOfUniversity.Controllers;
 public class TeacherController(
     [FromServices] ITeacherService service) : ControllerBase
 {
-    [HttpGet("get")]
-    public async Task<GetTeacherResponse?> GetTeacher([FromQuery] Guid id)
+    [HttpGet("get/{id:Guid}")]
+    public async Task<GetTeacherResponse?> GetTeacher(Guid id)
     {
         return await service.GetAsync(id);
     }
