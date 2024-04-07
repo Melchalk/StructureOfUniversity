@@ -1,6 +1,4 @@
-﻿using DbModels;
-using DTOs.Student.Response;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using StructureOfUniversity.DbModels;
 
 namespace StructureOfUniversity.Data.Interfaces;
