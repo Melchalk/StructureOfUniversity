@@ -10,6 +10,7 @@ using StructureOfUniversity.Data;
 using StructureOfUniversity.Data.Interfaces;
 using StructureOfUniversity.Domain;
 using StructureOfUniversity.Domain.Interfaces;
+using StructureOfUniversity.DTOs;
 using StructureOfUniversity.DTOs.Enums;
 using StructureOfUniversity.Infrastructure.Mapping;
 using StructureOfUniversity.Infrastructure.Swagger;
@@ -81,15 +82,13 @@ public class Startup
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
         ConfigureJwt(services);
+        ConfigureEnv(services);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
@@ -106,6 +105,14 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+        });
+    }
+
+    private void ConfigureEnv(IServiceCollection services)
+    {
+        services.Configure<UniversityInfo>(opt =>
+        {
+            opt.Name = Environment.GetEnvironmentVariable("UNIVERSITY_NAME")!;
         });
     }
 

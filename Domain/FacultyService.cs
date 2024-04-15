@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using StructureOfUniversity.Data.Interfaces;
 using StructureOfUniversity.DbModels;
 using StructureOfUniversity.Domain.Interfaces;
+using StructureOfUniversity.DTOs;
 using StructureOfUniversity.DTOs.Faculty.Requests;
 using StructureOfUniversity.DTOs.Faculty.Response;
 
@@ -12,13 +14,16 @@ public class FacultyService : IFacultyService
 {
     private readonly IFacultiesRepository _repository;
     private readonly IMapper _mapper;
+    private readonly UniversityInfo _university;
 
     public FacultyService(
         IFacultiesRepository repository,
-        IMapper mapper)
+        IMapper mapper,
+        IOptions<UniversityInfo> university)
     {
         _repository = repository;
         _mapper = mapper;
+        _university = university.Value;
     }
 
     public async Task<int?> CreateAsync(CreateFacultyRequest request)
@@ -61,5 +66,10 @@ public class FacultyService : IFacultyService
             ?? throw new ArgumentException("Faculty with this number not found");
 
         await _repository.DeleteAsync(student);
+    }
+
+    public UniversityInfo GetUniversityInfo()
+    {
+        return _university;
     }
 }

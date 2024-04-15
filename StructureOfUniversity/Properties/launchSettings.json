@@ -1,4 +1,33 @@
-﻿{
+{
+  "profiles": {
+    "Development": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "UNIVERSITY_NAME": "Mospolytech"
+      },
+      "dotnetRunMessages": true,
+      "externalUrlConfiguration": true
+    },
+    "Production": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "UNIVERSITY_NAME": "Moscow Polytech"
+      },
+      "dotnetRunMessages": false,
+      "externalUrlConfiguration": true
+    },
+    "Testing": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Testing",
+        "UNIVERSITY_NAME": "Mospolytech"
+      },
+      "dotnetRunMessages": false,
+      "externalUrlConfiguration": true
+    }
+  },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -6,18 +35,6 @@
     "iisExpress": {
       "applicationUrl": "http://localhost:62005",
       "sslPort": 44324
-    }
-  },
-  "profiles": {
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5083",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
     }
   }
 }
