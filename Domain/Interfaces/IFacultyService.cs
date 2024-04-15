@@ -1,4 +1,5 @@
-﻿using StructureOfUniversity.DTOs.Faculty.Requests;
+﻿using StructureOfUniversity.DTOs;
+using StructureOfUniversity.DTOs.Faculty.Requests;
 using StructureOfUniversity.DTOs.Faculty.Response;
 
 namespace StructureOfUniversity.Domain.Interfaces;
@@ -14,4 +15,6 @@ public interface IFacultyService
     Task UpdateAsync(UpdateFacultyRequest request);
 
     Task DeleteAsync(int number);
+
+    UniversityInfo GetUniversityInfo();
 }
