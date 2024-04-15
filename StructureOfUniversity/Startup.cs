@@ -92,6 +92,7 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
+        app.UseStaticFiles();
 
         UpdateDatabase(app);
 

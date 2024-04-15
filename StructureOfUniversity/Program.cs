@@ -5,6 +5,7 @@ Host
     .ConfigureWebHostDefaults(webBuilder =>
         {
             webBuilder.UseStartup<Startup>();
+            webBuilder.UseWebRoot("Static");
         })
     .Build()
     .Run();
