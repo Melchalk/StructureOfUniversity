@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StructureOfUniversity.Data.Interfaces;
 using StructureOfUniversity.DbModels;
 using StructureOfUniversity.Domain.Interfaces;
 using StructureOfUniversity.DTOs.Student.Requests;
 using StructureOfUniversity.DTOs.Student.Response;
+using StructureOfUniversity.Logging;
 using StructureOfUniversity.Validators.Interfaces;
 
 namespace StructureOfUniversity.Domain;
@@ -16,17 +18,20 @@ public class StudentService : IStudentService
     private readonly ICreateStudentValidator _createValidator;
     private readonly IUpdateStudentValidator _updateValidator;
     private readonly IMapper _mapper;
+    private readonly ILogger _logger;
 
     public StudentService(
         IStudentsRepository repository,
         ICreateStudentValidator createValidator,
         IUpdateStudentValidator updateValidator,
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<StudentService> logger)
     {
         _repository = repository;
         _createValidator = createValidator;
         _updateValidator = updateValidator;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Guid?> CreateAsync(CreateStudentRequest request)
@@ -35,12 +40,16 @@ public class StudentService : IStudentService
 
         if (!result.IsValid)
         {
+            _logger.LogWarning("Not valid request");
+
             return null;
         }
 
         var student = _mapper.Map<DbStudent>(request);
 
         await _repository.CreateAsync(student);
+
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_STUDENTS);
 
         return student.Id;
     }
@@ -49,6 +58,8 @@ public class StudentService : IStudentService
     {
         var student = await _repository.GetAsync(id);
 
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_STUDENTS);
+
         return student is null
             ? null
             : _mapper.Map<GetStudentResponse>(student);
@@ -56,6 +67,8 @@ public class StudentService : IStudentService
 
     public async Task<List<GetStudentResponse>> GetStudentsAsync()
     {
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_STUDENTS);
+
         return await _mapper.ProjectTo<GetStudentResponse>(
             _repository.GetStudents())
             .ToListAsync();
@@ -66,10 +79,14 @@ public class StudentService : IStudentService
 
         if (!result.IsValid)
         {
+            _logger.LogError("Not valid request");
+
             throw new ArgumentException("Student with this id not found");
         }
 
         var student = await _repository.GetAsync(request.Id);
+
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_STUDENTS);
 
         student!.Name = request.Name ?? student.Name;
         student.Course = request.Course ?? student.Course;
@@ -82,6 +99,8 @@ public class StudentService : IStudentService
     {
         var student = await _repository.GetAsync(id)
             ?? throw new ArgumentException("Student with this id not found");
+
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_STUDENTS);
 
         await _repository.DeleteAsync(student);
     }

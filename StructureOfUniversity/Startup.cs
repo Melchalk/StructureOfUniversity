@@ -12,6 +12,7 @@ using StructureOfUniversity.Domain;
 using StructureOfUniversity.Domain.Interfaces;
 using StructureOfUniversity.DTOs;
 using StructureOfUniversity.DTOs.Enums;
+using StructureOfUniversity.Infrastructure.Logging;
 using StructureOfUniversity.Infrastructure.Mapping;
 using StructureOfUniversity.Infrastructure.Swagger;
 using StructureOfUniversity.PostgreSql.Ef;
@@ -61,6 +62,28 @@ public class Startup
 
         services.AddControllers();
 
+        ConfigureDI(services);
+
+        services.AddLogging(opt =>
+        {
+            opt.AddConsole();
+            opt.AddFile(Directory.GetCurrentDirectory() + "/FileLogger.txt");
+            opt.AddDatabase(services
+                .BuildServiceProvider()
+                .GetRequiredService<IDataProvider>());
+        });
+
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+        ConfigureJwt(services);
+        ConfigureEnv(services);
+    }
+
+    private void ConfigureDI(IServiceCollection services)
+    {
         services.AddScoped<IDataProvider, StructureOfUniversityDbContext>();
         services.AddScoped<IStudentsRepository, StudentsRepository>();
         services.AddScoped<IFacultiesRepository, FacultiesRepository>();
@@ -75,14 +98,6 @@ public class Startup
 
         services.AddTransient<ICreateStudentValidator, CreateStudentValidator>();
         services.AddTransient<IUpdateStudentValidator, UpdateStudentValidator>();
-
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-
-        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-
-        ConfigureJwt(services);
-        ConfigureEnv(services);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
