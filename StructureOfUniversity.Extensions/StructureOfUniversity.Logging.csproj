@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DbModels\StructureOfUniversity.DbModels.csproj" />
+    <ProjectReference Include="..\PostgreSql.Ef\StructureOfUniversity.PostgreSql.Ef.csproj" />
+  </ItemGroup>
+
+</Project>

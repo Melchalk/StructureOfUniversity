@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Data\StructureOfUniversity.Data.csproj" />
     <ProjectReference Include="..\DbModels\StructureOfUniversity.DbModels.csproj" />
+    <ProjectReference Include="..\StructureOfUniversity.Extensions\StructureOfUniversity.Logging.csproj" />
   </ItemGroup>
 
 </Project>

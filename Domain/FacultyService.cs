@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StructureOfUniversity.Data.Interfaces;
 using StructureOfUniversity.DbModels;
@@ -8,21 +8,26 @@ using StructureOfUniversity.Domain.Interfaces;
 using StructureOfUniversity.DTOs;
 using StructureOfUniversity.DTOs.Faculty.Requests;
 using StructureOfUniversity.DTOs.Faculty.Response;
+using StructureOfUniversity.Logging;
 
 namespace StructureOfUniversity.Domain;
 public class FacultyService : IFacultyService
 {
     private readonly IFacultiesRepository _repository;
     private readonly IMapper _mapper;
+    private readonly ILogger _logger;
+
     private readonly UniversityInfo _university;
 
     public FacultyService(
         IFacultiesRepository repository,
         IMapper mapper,
+        ILogger<FacultyService> logger,
         IOptions<UniversityInfo> university)
     {
         _repository = repository;
         _mapper = mapper;
+        _logger = logger;
         _university = university.Value;
     }
 
@@ -32,12 +37,16 @@ public class FacultyService : IFacultyService
 
         await _repository.CreateAsync(faculty);
 
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_FACULTIES);
+
         return faculty.Number;
     }
 
     public async Task<GetFacultyResponse?> GetAsync(int number)
     {
         var faculty = await _repository.GetAsync(number);
+
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_FACULTIES);
 
         return faculty is null
             ? null
@@ -46,6 +55,8 @@ public class FacultyService : IFacultyService
 
     public async Task<List<GetFacultyResponse>> GetFacultiesAsync()
     {
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_FACULTIES);
+
         return await _mapper.ProjectTo<GetFacultyResponse>(
             _repository.GetFaculties())
             .ToListAsync();
@@ -53,6 +64,8 @@ public class FacultyService : IFacultyService
     public async Task UpdateAsync(UpdateFacultyRequest request)
     {
         var faculty = await _repository.GetAsync(request.Number);
+
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_FACULTIES);
 
         faculty!.Name = request.Name ?? faculty.Name;
         faculty.DeanName = request.DeanName ?? faculty.DeanName;
@@ -64,6 +77,8 @@ public class FacultyService : IFacultyService
     {
         var student = await _repository.GetAsync(number)
             ?? throw new ArgumentException("Faculty with this number not found");
+
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_FACULTIES);
 
         await _repository.DeleteAsync(student);
     }

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StructureOfUniversity.Auth.Helpers;
 using StructureOfUniversity.Auth.Services.Interfaces;
 using StructureOfUniversity.Data.Interfaces;
 using StructureOfUniversity.DbModels;
 using StructureOfUniversity.DTOs.Teacher.Requests;
+using StructureOfUniversity.Logging;
 using System.Text;
 
 namespace StructureOfUniversity.Auth.Services;
@@ -15,13 +17,16 @@ public class UserService : IUserService
 
     private readonly ITeachersRepository _repository;
     private readonly IMapper _mapper;
+    private readonly ILogger _logger;
 
     public UserService(
         ITeachersRepository repository,
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<UserService> logger)
     {
         _repository = repository;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<DbTeacher> RegisterUser(CreateTeacherRequest request)
@@ -58,6 +63,8 @@ public class UserService : IUserService
         dbUser.Password = PasswordHelper.GetPasswordHash(dbUser.Phone, dbUser.Password, salt);
 
         await _repository.CreateAsync(dbUser);
+
+        _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_TEACHERS);
 
         return dbUser;
     }
