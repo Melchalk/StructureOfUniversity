@@ -8,6 +8,7 @@ using StructureOfUniversity.Domain.Interfaces;
 using StructureOfUniversity.DTOs.Student.Requests;
 using StructureOfUniversity.DTOs.Student.Response;
 using StructureOfUniversity.Logging;
+using StructureOfUniversity.Models.Exceptions;
 using StructureOfUniversity.Validators.Interfaces;
 
 namespace StructureOfUniversity.Domain;
@@ -42,7 +43,7 @@ public class StudentService : IStudentService
         {
             _logger.LogWarning("Not valid request");
 
-            return null;
+            throw new BadRequestException(string.Join('\n', result.Errors));
         }
 
         var student = _mapper.Map<DbStudent>(request);
@@ -56,13 +57,12 @@ public class StudentService : IStudentService
 
     public async Task<GetStudentResponse?> GetAsync(Guid id)
     {
-        var student = await _repository.GetAsync(id);
+        var student = await _repository.GetAsync(id)
+            ?? throw new BadRequestException($"Student with id = '{id}' not found");
 
         _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_STUDENTS);
 
-        return student is null
-            ? null
-            : _mapper.Map<GetStudentResponse>(student);
+        return _mapper.Map<GetStudentResponse>(student);
     }
 
     public async Task<List<GetStudentResponse>> GetStudentsAsync()
@@ -81,7 +81,7 @@ public class StudentService : IStudentService
         {
             _logger.LogError("Not valid request");
 
-            throw new ArgumentException("Student with this id not found");
+            throw new BadRequestException(string.Join('\n', result.Errors));
         }
 
         var student = await _repository.GetAsync(request.Id);
@@ -98,7 +98,7 @@ public class StudentService : IStudentService
     public async Task DeleteAsync(Guid id)
     {
         var student = await _repository.GetAsync(id)
-            ?? throw new ArgumentException("Student with this id not found");
+            ?? throw new BadRequestException($"Student with id = '{id}' not found");
 
         _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_STUDENTS);
 

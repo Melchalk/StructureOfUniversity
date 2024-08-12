@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using StructureOfUniversity.Auth.Services.Interfaces;
 using StructureOfUniversity.DTOs.Enums;
+using StructureOfUniversity.Models.Exceptions;
 using System.Security.Claims;
 
 namespace StructureOfUniversity.Infrastructure.Middlewares;
@@ -18,7 +19,15 @@ public class TokenMiddleware
 
     public async Task Invoke(HttpContext context, IAuthService authService)
     {
+        if (string.Equals(context.Request.Method, "OPTIONS", StringComparison.OrdinalIgnoreCase) ||
+            context.Request.Path.StartsWithSegments(new PathString("/swagger")))
+        {
+            await _next(context);
+            return;
+        }
+
         var endpoint = context.GetEndpoint() ?? throw new Exception("Endpoint was null.");
+
         var isAuthorize = endpoint.Metadata.OfType<AuthorizeAttribute>().Any();
         if (!isAuthorize)
         {
@@ -27,7 +36,7 @@ public class TokenMiddleware
         }
 
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()
-            ?? throw new Exception("Token validation was failed.");
+            ?? throw new UnauthorizedException("Token validation was failed.");
 
         var claims = authService.ValidateToken(token);
 
@@ -38,7 +47,7 @@ public class TokenMiddleware
             string.IsNullOrEmpty(tokenType) ||
             tokenType != TokenType.Access.ToString())
         {
-            throw new Exception("Token validation was failed.");
+            throw new UnauthorizedException("Token validation was failed.");
         }
 
         context.Items[UserPhone] = phone;

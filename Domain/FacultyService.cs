@@ -11,6 +11,7 @@ using StructureOfUniversity.DTOs;
 using StructureOfUniversity.DTOs.Faculty.Requests;
 using StructureOfUniversity.DTOs.Faculty.Response;
 using StructureOfUniversity.Logging;
+using StructureOfUniversity.Models.Exceptions;
 
 namespace StructureOfUniversity.Domain;
 public class FacultyService : IFacultyService
@@ -51,13 +52,12 @@ public class FacultyService : IFacultyService
 
     public async Task<GetFacultyResponse?> GetAsync(int number)
     {
-        var faculty = await _repository.GetAsync(number);
+        var faculty = await _repository.GetAsync(number)
+            ?? throw new BadRequestException($"Faculty with number = '{number}' not found");
 
         _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_FACULTIES);
 
-        return faculty is null
-            ? null
-            : _mapper.Map<GetFacultyResponse>(faculty);
+        return _mapper.Map<GetFacultyResponse>(faculty);
     }
 
     public async Task<List<GetFacultyResponse>> GetFacultiesAsync()
@@ -70,7 +70,8 @@ public class FacultyService : IFacultyService
     }
     public async Task UpdateAsync(UpdateFacultyRequest request)
     {
-        var faculty = await _repository.GetAsync(request.Number);
+        var faculty = await _repository.GetAsync(request.Number)
+            ?? throw new BadRequestException($"Faculty with number = '{request.Number}' not found");
 
         _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_FACULTIES);
 
@@ -83,7 +84,7 @@ public class FacultyService : IFacultyService
     public async Task DeleteAsync(int number)
     {
         var student = await _repository.GetAsync(number)
-            ?? throw new ArgumentException("Faculty with this number not found");
+            ?? throw new BadRequestException("Faculty with this number not found");
 
         _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_FACULTIES);
 
