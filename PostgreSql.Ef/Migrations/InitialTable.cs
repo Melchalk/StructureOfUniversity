@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Logging;
 using StructureOfUniversity.DbModels;
 using StructureOfUniversity.DTOs.Enums;
 
 namespace StructureOfUniversity.PostgreSql.Ef.Migrations;
 
 [DbContext(typeof(StructureOfUniversityDbContext))]
-[Migration("20240317191711_InitialTables")]
+[Migration("20240430224205_InitialTables")]
 class InitialTable : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,6 +17,9 @@ class InitialTable : Migration
 
         var sequenceFaculty = "generate_faculty_number_seq";
         migrationBuilder.Sql($"CREATE SEQUENCE {sequenceFaculty} START WITH 1 INCREMENT BY 1;");
+
+        var sequenceLogs = "generate_log_number_seq";
+        migrationBuilder.Sql($"CREATE SEQUENCE {sequenceLogs} START WITH 1 INCREMENT BY 1;");
 
         #endregion
 
@@ -28,6 +32,7 @@ class InitialTable : Migration
                 Number = table.Column<int>(nullable: false, defaultValueSql: $"nextval('{sequenceFaculty}')"),
                 Name = table.Column<string>(nullable: false),
                 DeanName = table.Column<string>(nullable: false),
+                CreatedByPhone = table.Column<string>(nullable: false),
             },
             constraints: table =>
             {
@@ -87,6 +92,25 @@ class InitialTable : Migration
         );
 
         #endregion
+
+        #region Log
+
+        migrationBuilder.CreateTable(
+            name: DbLog.TableName,
+            columns: table => new
+            {
+                Number = table.Column<int>(nullable: false, defaultValueSql: $"nextval('{sequenceLogs}')"),
+                Level = table.Column<LogLevel>(nullable: false),
+                Message = table.Column<string>(nullable: false),
+                Time = table.Column<DateTime>(nullable: false),
+            },
+            constraints: table =>
+            {
+                table.PrimaryKey("PK_Logs", x => x.Number);
+            }
+        );
+
+        #endregion
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)
@@ -94,5 +118,6 @@ class InitialTable : Migration
         migrationBuilder.DropTable(DbStudent.TableName);
         migrationBuilder.DropTable(DbFaculty.TableName);
         migrationBuilder.DropTable(DbTeacher.TableName);
+        migrationBuilder.DropTable(DbLog.TableName);
     }
 }

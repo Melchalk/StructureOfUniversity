@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StructureOfUniversity.Data.Interfaces;
 using StructureOfUniversity.DbModels;
+using StructureOfUniversity.Domain.Helpers;
 using StructureOfUniversity.Domain.Interfaces;
 using StructureOfUniversity.DTOs;
 using StructureOfUniversity.DTOs.Faculty.Requests;
@@ -13,6 +15,7 @@ using StructureOfUniversity.Logging;
 namespace StructureOfUniversity.Domain;
 public class FacultyService : IFacultyService
 {
+    private readonly IHttpContextAccessor _httpContext;
     private readonly IFacultiesRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
@@ -20,11 +23,13 @@ public class FacultyService : IFacultyService
     private readonly UniversityInfo _university;
 
     public FacultyService(
+        IHttpContextAccessor httpContext,
         IFacultiesRepository repository,
         IMapper mapper,
         ILogger<FacultyService> logger,
         IOptions<UniversityInfo> university)
     {
+        _httpContext = httpContext;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
@@ -34,6 +39,8 @@ public class FacultyService : IFacultyService
     public async Task<int?> CreateAsync(CreateFacultyRequest request)
     {
         var faculty = _mapper.Map<DbFaculty>(request);
+
+        faculty.CreatedByPhone = _httpContext.GetUserPhone();
 
         await _repository.CreateAsync(faculty);
 
