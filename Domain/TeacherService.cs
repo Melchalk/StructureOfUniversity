@@ -6,6 +6,7 @@ using StructureOfUniversity.Domain.Interfaces;
 using StructureOfUniversity.DTOs.Teacher.Requests;
 using StructureOfUniversity.DTOs.Teacher.Response;
 using StructureOfUniversity.Logging;
+using StructureOfUniversity.Models.Exceptions;
 
 namespace StructureOfUniversity.Domain;
 public class TeacherService : ITeacherService
@@ -26,13 +27,12 @@ public class TeacherService : ITeacherService
 
     public async Task<GetTeacherResponse?> GetAsync(Guid id)
     {
-        var teacher = await _repository.GetAsync(id);
+        var teacher = await _repository.GetAsync(id)
+            ?? throw new BadRequestException($"Teacher with number = '{id}' not found");
 
         _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_TEACHERS);
 
-        return teacher is null
-            ? null
-            : _mapper.Map<GetTeacherResponse>(teacher);
+        return _mapper.Map<GetTeacherResponse>(teacher);
     }
 
     public async Task<List<GetTeacherResponse>> GetTeachersAsync()
@@ -46,7 +46,8 @@ public class TeacherService : ITeacherService
 
     public async Task UpdateAsync(UpdateTeacherRequest request)
     {
-        var teacher = await _repository.GetAsync(request.Id);
+        var teacher = await _repository.GetAsync(request.Id)
+            ?? throw new BadRequestException($"Teacher with number = '{request.Id}' not found");
 
         _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_TEACHERS);
 
@@ -61,7 +62,7 @@ public class TeacherService : ITeacherService
     public async Task DeleteAsync(Guid id)
     {
         var student = await _repository.GetAsync(id)
-            ?? throw new ArgumentException("Teacher with this id not found");
+            ?? throw new BadRequestException($"Teacher with number = '{id}' not found");
 
         _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_TEACHERS);
 

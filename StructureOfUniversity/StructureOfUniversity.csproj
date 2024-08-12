@@ -13,6 +13,7 @@
     <PackageReference Include="DotNetEnv" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -20,6 +21,7 @@
     <ProjectReference Include="..\Domain\StructureOfUniversity.Domain.csproj" />
     <ProjectReference Include="..\PostgreSql.Ef\StructureOfUniversity.PostgreSql.Ef.csproj" />
     <ProjectReference Include="..\StructureOfUniversity.Auth\StructureOfUniversity.Auth.csproj" />
+    <ProjectReference Include="..\StructureOfUniversity.Models.Exceptions\StructureOfUniversity.Models.Exceptions.csproj" />
   </ItemGroup>
 
 </Project>

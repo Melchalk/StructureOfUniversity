@@ -7,6 +7,7 @@ using StructureOfUniversity.Data.Interfaces;
 using StructureOfUniversity.DbModels;
 using StructureOfUniversity.DTOs.Teacher.Requests;
 using StructureOfUniversity.Logging;
+using StructureOfUniversity.Models.Exceptions;
 using System.Text;
 
 namespace StructureOfUniversity.Auth.Services;
@@ -50,7 +51,7 @@ public class UserService : IUserService
 
         if (await _repository.GetTeachers().AnyAsync(x => string.Equals(x.Phone, phoneChecked)))
         {
-            throw new ArgumentException("User with this phone already exists.");
+            throw new BadRequestException("User with this phone already exists.");
         }
 
         request.Phone = phoneChecked;
@@ -77,8 +78,6 @@ public class UserService : IUserService
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Phone == phone);
 
-        return user is null
-            ? throw new ArgumentException($"User with phone {phone} is not found.")
-            : user;
+        return user ?? throw new BadRequestException($"User with phone {phone} is not found.");
     }
 }

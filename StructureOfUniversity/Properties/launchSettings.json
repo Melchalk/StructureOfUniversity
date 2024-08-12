@@ -6,7 +6,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "UNIVERSITY_NAME": "Mospolytech"
       },
-      "dotnetRunMessages": true,
+      "dotnetRunMessages": false,
       "externalUrlConfiguration": true
     },
     "Production": {

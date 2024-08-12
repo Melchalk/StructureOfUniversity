@@ -65,6 +65,8 @@ public class Startup
 
         ConfigureDI(services);
 
+        services.AddHttpContextAccessor();
+
         services.AddLogging(opt =>
         {
             opt.AddConsole();
@@ -109,7 +111,7 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-        app.UseMiddleware<TokenMiddleware>();
+        app.UseMiddleware<GlobalExceptionMiddleware>();
 
         UpdateDatabase(app);
 
@@ -124,6 +126,8 @@ public class Startup
         {
             endpoints.MapControllers();
         });
+
+        app.UseMiddleware<TokenMiddleware>();
     }
 
     private void ConfigureEnv(IServiceCollection services)

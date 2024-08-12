@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Data\StructureOfUniversity.Data.csproj" />
     <ProjectReference Include="..\DbModels\StructureOfUniversity.DbModels.csproj" />
     <ProjectReference Include="..\StructureOfUniversity.Extensions\StructureOfUniversity.Logging.csproj" />
+    <ProjectReference Include="..\StructureOfUniversity.Models.Exceptions\StructureOfUniversity.Models.Exceptions.csproj" />
   </ItemGroup>
 
 </Project>
