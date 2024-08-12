@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Data\StructureOfUniversity.Data.csproj" />
     <ProjectReference Include="..\DTOs\StructureOfUniversity.DTOs.csproj" />
+    <ProjectReference Include="..\StructureOfUniversity.Extensions\StructureOfUniversity.Logging.csproj" />
     <ProjectReference Include="..\Validators\StructureOfUniversity.Validators.csproj" />
   </ItemGroup>
 

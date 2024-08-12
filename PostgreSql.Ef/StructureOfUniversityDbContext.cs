@@ -11,6 +11,8 @@ public class StructureOfUniversityDbContext : DbContext, IDataProvider
     public DbSet<DbTeacher> Teachers { get; set; }
     public DbSet<DbFaculty> Faculties { get; set; }
 
+    public DbSet<DbLog> LogRecords { get; set; }
+
     public StructureOfUniversityDbContext(
         DbContextOptions<StructureOfUniversityDbContext> options) : base(options)
     {
