@@ -9,6 +9,7 @@ namespace StructureOfUniversity.Infrastructure.Middlewares;
 public class TokenMiddleware
 {
     private const string UserPhone = "UserPhone";
+    private const string UserPosition = "UserPosition";
 
     private readonly RequestDelegate _next;
 
@@ -41,6 +42,7 @@ public class TokenMiddleware
         var claims = authService.ValidateToken(token);
 
         var phone = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)?.Value;
+
         var tokenType = claims.Claims.FirstOrDefault(x => x.Type == "TokenType")?.Value;
 
         if (string.IsNullOrEmpty(phone) ||
@@ -51,6 +53,8 @@ public class TokenMiddleware
         }
 
         context.Items[UserPhone] = phone;
+        context.Items[UserPosition] = claims.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
 
         await _next(context);
     }

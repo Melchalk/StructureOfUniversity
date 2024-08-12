@@ -32,7 +32,7 @@ public class FacultyController(
         return await service.CreateAsync(request);
     }
 
-    [Authorize(Policy = "More important than the assistant")]
+    //[Authorize(Policy = "More important than the assistant")]
     [HttpPut("update")]
     public async Task UpdateFaculty(
         [FromBody] UpdateFacultyRequest request)

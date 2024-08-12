@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +13,7 @@ using StructureOfUniversity.Domain;
 using StructureOfUniversity.Domain.Interfaces;
 using StructureOfUniversity.DTOs;
 using StructureOfUniversity.DTOs.Enums;
+using StructureOfUniversity.Infrastructure;
 using StructureOfUniversity.Infrastructure.Logging;
 using StructureOfUniversity.Infrastructure.Mapping;
 using StructureOfUniversity.Infrastructure.Middlewares;
@@ -72,7 +74,7 @@ public class Startup
             opt.AddConsole();
             opt.AddFile(Directory.GetCurrentDirectory() + "/FileLogger.txt");
             opt.AddDatabase(services
-                .BuildServiceProvider()
+                .BuildServiceProvider()!
                 .GetRequiredService<IDataProvider>());
         });
 
@@ -108,14 +110,19 @@ public class Startup
         app.UseSwagger();
         app.UseSwaggerUI();
 
-        app.UseHttpsRedirection();
-        app.UseStaticFiles();
-
         app.UseMiddleware<GlobalExceptionMiddleware>();
 
         UpdateDatabase(app);
 
         app.UseRouting();
+
+        app.UseRewriter(
+            new RewriteOptions()
+                .Add(RewriterOptions.RewriteRequests)
+        );
+        app.UseStaticFiles();
+
+        app.UseMiddleware<TokenMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();
@@ -126,8 +133,6 @@ public class Startup
         {
             endpoints.MapControllers();
         });
-
-        app.UseMiddleware<TokenMiddleware>();
     }
 
     private void ConfigureEnv(IServiceCollection services)

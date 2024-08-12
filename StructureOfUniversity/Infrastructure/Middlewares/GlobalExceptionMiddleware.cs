@@ -21,7 +21,7 @@ public class GlobalExceptionMiddleware
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message);
+            Log.Logger.Error(ex.Message);
 
             await HandleExceptionAsync(httpContext, ex);
         }
