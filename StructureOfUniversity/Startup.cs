@@ -83,6 +83,12 @@ public class Startup
 
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
+        services.AddMemoryCache();
+        services.AddStackExchangeRedisCache(options => {
+            options.Configuration = "localhost";
+            options.InstanceName = "local";
+        });
+
         ConfigureJwt(services);
         ConfigureEnv(services);
     }
