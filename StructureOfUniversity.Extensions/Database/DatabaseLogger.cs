@@ -17,7 +17,7 @@ public class DatabaseLogger : ILogger, IDisposable
         LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
         lock (_lock)
-        {
+        {   /*
             _provider.LogRecords.Add(new()
             {
                 Message = formatter(state, exception),
@@ -26,6 +26,7 @@ public class DatabaseLogger : ILogger, IDisposable
             });
 
             _provider.Save();
+            */
         }
     }
 
