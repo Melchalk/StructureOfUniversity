@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using StructureOfUniversity.Auth.Helpers;
 using StructureOfUniversity.Auth.Services.Interfaces;
@@ -19,15 +20,18 @@ public class UserService : IUserService
     private readonly ITeachersRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
+    private readonly IMemoryCache _cache;
 
     public UserService(
         ITeachersRepository repository,
         IMapper mapper,
-        ILogger<UserService> logger)
+        ILogger<UserService> logger,
+        IMemoryCache memoryCache)
     {
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
+        _cache = memoryCache;
     }
 
     public async Task<DbTeacher> RegisterUser(CreateTeacherRequest request)
@@ -70,14 +74,34 @@ public class UserService : IUserService
         return dbUser;
     }
 
-    public async Task<DbTeacher> GetUserByPhone(string? phone)
+    public async Task<DbTeacher> GetUserByPhone(string phone)
     {
-        var user = phone is null
-            ? null
-            : await _repository.GetTeachers()
+        _cache.TryGetValue(phone, out DbTeacher? user);
+
+        if (user is null)
+        {
+            user = await _repository.GetTeachers()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Phone == phone);
 
-        return user ?? throw new BadRequestException($"User with phone {phone} is not found.");
+            if (user is not null)
+            {
+                var cacheOptions = new MemoryCacheEntryOptions()
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1),
+                };
+
+                var callbackRegistration = new PostEvictionCallbackRegistration
+                {
+                    EvictionCallback = (object key, object? value, EvictionReason reason, object? state)
+                    => Console.WriteLine($"Cache for user with phone = '{phone}' was old")
+                };
+                cacheOptions.PostEvictionCallbacks.Add(callbackRegistration);
+
+                _cache.Set(phone, user, cacheOptions);
+            }
+        }
+
+        return user?? throw new BadRequestException($"User with phone {phone} is not found.");
     }
 }

@@ -7,5 +7,5 @@ public interface IUserService
 {
     Task<DbTeacher> RegisterUser(CreateTeacherRequest request);
 
-    Task<DbTeacher> GetUserByPhone(string? phone);
+    Task<DbTeacher> GetUserByPhone(string phone);
 }

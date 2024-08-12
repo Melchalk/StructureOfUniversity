@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StructureOfUniversity.Data.Interfaces;
@@ -12,6 +13,7 @@ using StructureOfUniversity.DTOs.Faculty.Requests;
 using StructureOfUniversity.DTOs.Faculty.Response;
 using StructureOfUniversity.Logging;
 using StructureOfUniversity.Models.Exceptions;
+using System.Text.Json;
 
 namespace StructureOfUniversity.Domain;
 public class FacultyService : IFacultyService
@@ -20,6 +22,7 @@ public class FacultyService : IFacultyService
     private readonly IFacultiesRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
+    private readonly IDistributedCache _cache;
 
     private readonly UniversityInfo _university;
 
@@ -28,13 +31,15 @@ public class FacultyService : IFacultyService
         IFacultiesRepository repository,
         IMapper mapper,
         ILogger<FacultyService> logger,
-        IOptions<UniversityInfo> university)
+        IOptions<UniversityInfo> university,
+        IDistributedCache distributedCache)
     {
         _httpContext = httpContext;
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
         _university = university.Value;
+        _cache = distributedCache;
     }
 
     public async Task<int?> CreateAsync(CreateFacultyRequest request)
@@ -52,8 +57,25 @@ public class FacultyService : IFacultyService
 
     public async Task<GetFacultyResponse?> GetAsync(int number)
     {
-        var faculty = await _repository.GetAsync(number)
-            ?? throw new BadRequestException($"Faculty with number = '{number}' not found");
+        DbFaculty? faculty = null;
+
+        var facultyString = await _cache.GetStringAsync(number.ToString());
+
+        if (facultyString != null)
+            faculty = JsonSerializer.Deserialize<DbFaculty>(facultyString);
+
+        if (faculty is null)
+        {
+            faculty = await _repository.GetAsync(number)
+                ?? throw new BadRequestException($"Faculty with number = '{number}' not found");
+
+            facultyString = JsonSerializer.Serialize(faculty);
+
+            await _cache.SetStringAsync(faculty.Number.ToString(), facultyString, new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2)
+            });
+        }
 
         _logger.LogInformation(LoggerConstants.SUCCESSFUL_ACCESS_FACULTIES);
 
