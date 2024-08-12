@@ -14,6 +14,7 @@ using StructureOfUniversity.Domain.Interfaces;
 using StructureOfUniversity.DTOs;
 using StructureOfUniversity.DTOs.Enums;
 using StructureOfUniversity.Infrastructure;
+using StructureOfUniversity.Infrastructure.HealthCheck;
 using StructureOfUniversity.Infrastructure.Logging;
 using StructureOfUniversity.Infrastructure.Mapping;
 using StructureOfUniversity.Infrastructure.Middlewares;
@@ -68,6 +69,11 @@ public class Startup
         ConfigureDI(services);
 
         services.AddHttpContextAccessor();
+        services.AddHttpClient();
+
+        services
+            .AddHealthChecks()
+            .AddCheck<RequestTimeHealthCheck>("RequestTimeCheck");
 
         services.AddLogging(opt =>
         {
@@ -138,6 +144,7 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapHealthChecks("/health");
         });
     }
 
