@@ -16,6 +16,9 @@ public class DbFaculty
     [MaxLength(100)]
     public required string DeanName { get; set; }
 
+    [MaxLength(50)]
+    public required string CreatedByPhone { get; set; }
+
     public ICollection<DbStudent> Students { get; set; }
     public ICollection<DbTeacher> Teachers { get; set; }
 

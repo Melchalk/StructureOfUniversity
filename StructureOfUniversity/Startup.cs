@@ -14,6 +14,7 @@ using StructureOfUniversity.DTOs;
 using StructureOfUniversity.DTOs.Enums;
 using StructureOfUniversity.Infrastructure.Logging;
 using StructureOfUniversity.Infrastructure.Mapping;
+using StructureOfUniversity.Infrastructure.Middlewares;
 using StructureOfUniversity.Infrastructure.Swagger;
 using StructureOfUniversity.PostgreSql.Ef;
 using StructureOfUniversity.PostgreSql.Ef.Interfaces;
@@ -107,6 +108,8 @@ public class Startup
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
+        app.UseMiddleware<TokenMiddleware>();
 
         UpdateDatabase(app);
 

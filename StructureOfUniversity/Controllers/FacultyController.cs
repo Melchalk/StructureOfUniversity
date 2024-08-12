@@ -6,7 +6,7 @@ using StructureOfUniversity.DTOs.Faculty.Response;
 
 namespace StructureOfUniversity.Controllers;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [Route("api/faculty")]
 public class FacultyController(
